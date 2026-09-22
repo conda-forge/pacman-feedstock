@@ -14,7 +14,7 @@ source:
     - 0001-install-python-extension-into-site-packages.patch
 
 build:
-  number: 0
+  number: 1
   skip: osx and x86_64
   dynamic_linking:
     rpath_allowlist:
