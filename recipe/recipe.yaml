@@ -1,7 +1,7 @@
 schema_version: 1
 
 context:
-  version: "0.1.0"
+  version: "0.1.1"
 
 package:
   name: pacman
@@ -9,12 +9,12 @@ package:
 
 source:
   url: https://gitlab.com/drti/pacman/-/archive/v${{ version }}/pacman-v${{ version }}.tar.gz
-  sha256: 3baba5b25bfed66bb49e20186192c6ac0ea75b8b1ba0932ed347449d29f7adb9
+  sha256: 7aa36cfd32624e38c2af1912af841df12785e3de4c1f5ddd143f5d53f446ec71
   patches:
     - 0001-install-python-extension-into-site-packages.patch
 
 build:
-  number: 1
+  number: 0
   skip: osx and x86_64
   dynamic_linking:
     rpath_allowlist:
