@@ -23,7 +23,7 @@ requirements:
   build:
     - ${{ compiler('cxx') }}
     - ${{ stdlib('c') }}
-    - cmake >=3.21.1,<4
+    - cmake >=3.31,<4
     - ninja
   host:
     - arborx >=2.1
