@@ -26,8 +26,6 @@ requirements:
     - cmake
     - ninja
   host:
-    - if: osx
-      then: llvm-openmp
     - arborx >=2.1
     - kokkos >=5.2
     - kokkos-kernels >=5.2
