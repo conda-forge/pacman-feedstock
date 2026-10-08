@@ -12,9 +12,9 @@ grep -RnE \
   "$PREFIX/lib/cmake/KokkosKernels" || true
 
 echo "=== Installed Kokkos libraries ==="
-ls -l "$PREFIX"/lib/libkokkos*.dylib
-
-
+find "$PREFIX/lib" -maxdepth 1 \
+  \( -name 'libkokkos*.so*' -o -name 'libkokkos*.dylib' -o -name 'libkokkos*.a' \) \
+  -print
 
 cmake  ${CMAKE_ARGS} -S ${SRC_DIR} -B build \
 -G Ninja \
