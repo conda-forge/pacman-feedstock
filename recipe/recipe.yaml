@@ -12,10 +12,10 @@ source:
   sha256: 7aa36cfd32624e38c2af1912af841df12785e3de4c1f5ddd143f5d53f446ec71
   patches:
     - 0001-install-python-extension-into-site-packages.patch
-
+    - 0002-disable-shared-library-exports.patch
+    
 build:
-  number: 0
-  skip: osx and x86_64
+  number: 1
   dynamic_linking:
     rpath_allowlist:
       - $ORIGIN
@@ -24,11 +24,9 @@ requirements:
   build:
     - ${{ compiler('cxx') }}
     - ${{ stdlib('c') }}
-    - cmake
+    - cmake >=3.31,<4
     - ninja
   host:
-    - if: osx
-      then: llvm-openmp
     - arborx >=2.1
     - kokkos >=5.2
     - kokkos-kernels >=5.2
