@@ -8,7 +8,7 @@ package:
   version: ${{ version }}
 
 source:
-  url: https://gitlab.com/felipebordeu/pacman/-/archive/v${{ version }}/pacman-v${{ version }}.tar.gz
+  url: https://gitlab.com/drti/pacman/-/archive/v${{ version }}/pacman-v${{ version }}.tar.gz
   sha256: 7aa36cfd32624e38c2af1912af841df12785e3de4c1f5ddd143f5d53f446ec71
   patches:
     - 0001-install-python-extension-into-site-packages.patch
