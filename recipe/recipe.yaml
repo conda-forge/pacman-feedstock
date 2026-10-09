@@ -8,12 +8,12 @@ package:
   version: ${{ version }}
 
 source:
-  url: https://gitlab.com/felipebordeu/pacman/-/archive/Fixosx/pacman-Fixosx.tar.gz
-  #url: https://gitlab.com/felipebordeu/pacman/-/archive/v${{ version }}/pacman-v${{ version }}.tar.gz
-  sha256: 1bb4fd6942caeb23a59fa44d47b100f88123fd6595d0d9438bdaf06362edb585
+  url: https://gitlab.com/felipebordeu/pacman/-/archive/v${{ version }}/pacman-v${{ version }}.tar.gz
+  sha256: 7aa36cfd32624e38c2af1912af841df12785e3de4c1f5ddd143f5d53f446ec71
   patches:
     - 0001-install-python-extension-into-site-packages.patch
-
+    - 0002-disable-shared-library-exports.patch
+    
 build:
   number: 1
   dynamic_linking:
