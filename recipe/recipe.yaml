@@ -1,7 +1,7 @@
 schema_version: 1
 
 context:
-  version: "0.1.1"
+  version: "0.1.2"
 
 package:
   name: pacman
@@ -9,13 +9,13 @@ package:
 
 source:
   url: https://gitlab.com/drti/pacman/-/archive/v${{ version }}/pacman-v${{ version }}.tar.gz
-  sha256: 7aa36cfd32624e38c2af1912af841df12785e3de4c1f5ddd143f5d53f446ec71
+  sha256: 8da7c647fcdae42cecf8846d9fc4f872c21aa0f989dbb869a850df8e1642d2e9
   patches:
     - 0001-install-python-extension-into-site-packages.patch
     - 0002-disable-shared-library-exports.patch
-    
+
 build:
-  number: 1
+  number: 0
   dynamic_linking:
     rpath_allowlist:
       - $ORIGIN
