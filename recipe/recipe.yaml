@@ -10,6 +10,9 @@ package:
 source:
   url: https://gitlab.com/drti/pacman/-/archive/v${{ version }}/pacman-v${{ version }}.tar.gz
   sha256: 8da7c647fcdae42cecf8846d9fc4f872c21aa0f989dbb869a850df8e1642d2e9
+  patches:
+    # Upstream has no dllexport annotations, so the Windows DLL exported nothing.
+    - 0001-export-public-api-on-windows.patch
 
 build:
   number: 0
@@ -45,6 +48,15 @@ tests:
       - if: unix
         then: test -f $PREFIX/lib/cmake/PACMAN/PACMANConfig.cmake
         else: if exist %LIBRARY_PREFIX%\lib\cmake\PACMAN\PACMANConfig.cmake (exit 0) else (exit 1)
+  - script:
+      - if: linux
+        then: test -f $PREFIX/lib/libpacman_interface_cpp.so
+      - if: osx
+        then: test -f $PREFIX/lib/libpacman_interface_cpp.dylib
+      - if: win
+        then:
+          - if not exist %LIBRARY_BIN%\pacman_interface_cpp.dll exit 1
+          - if not exist %LIBRARY_LIB%\pacman_interface_cpp.lib exit 1
 
 about:
   homepage: https://gitlab.com/drti/pacman

@@ -1,0 +1,91 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 023f1f8..0009778 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -71,6 +71,9 @@ pacman_add_explicit_instantiation(
+     VARIANTS WendlandC0 WendlandC2 WendlandC4 WendlandC6 WendlandC8
+ )
+ target_link_libraries(pacman_interface_cpp PUBLIC PACMAN)
++if(NOT BUILD_SHARED_LIBS)
++    target_compile_definitions(pacman_interface_cpp PUBLIC PACMAN_STATIC_DEFINE)
++endif()
+ target_include_directories(pacman_interface_cpp PUBLIC
+     $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/src>
+     $<INSTALL_INTERFACE:include/PACMAN>
+diff --git a/src/interface.hpp b/src/interface.hpp
+index 611e96d..f62a57d 100644
+--- a/src/interface.hpp
++++ b/src/interface.hpp
+@@ -7,6 +7,18 @@
+ 
+ #include "common/execspaces.hpp"
+ #include "common/types.hpp"
++
++// Symbol visibility for the pacman_interface_cpp shared library on Windows.
++// CMake defines pacman_interface_cpp_EXPORTS when building it as a DLL.
++#if defined(_WIN32) && !defined(PACMAN_STATIC_DEFINE)
++#if defined(pacman_interface_cpp_EXPORTS)
++#define PACMAN_API __declspec(dllexport)
++#else
++#define PACMAN_API __declspec(dllimport)
++#endif
++#else
++#define PACMAN_API
++#endif
+ namespace PACMAN {
+ 
+ // ---------------------------------------------------------------------------
+@@ -23,7 +35,7 @@ using ExecSpaces = PACMAN::ExecSpaces;
+ /// @param execSpace Execution-space selector (@see ExecSpaces constants).
+ /// @return true if the execution space was compiled in, false if it was not or
+ /// if `execSpace` is not a known selector.
+-bool is_execspace_available(unsigned char execSpace);
++PACMAN_API bool is_execspace_available(unsigned char execSpace);
+ 
+ // ---------------------------------------------------------------------------
+ // RBF function constants
+@@ -77,7 +89,7 @@ struct RbfFunctions {
+ /// @throws std::invalid_argument on inconsistent sizes / null pointers,
+ /// `spaceDimension` not in {1, 2, 3}, an unknown FE variant `method`, or if
+ /// `execSpace` is unknown or not available (@see is_execspace_available).
+-void fe_interpolate(int_t spaceDimension, unsigned char execSpace,
++PACMAN_API void fe_interpolate(int_t spaceDimension, unsigned char execSpace,
+                     method_t method, coordinates_t *sourcePoints,
+                     int_t nSourcePoints, fp_t *sourceValues, int_t *connVal,
+                     int_t connValSize, offset_t *connOff, int_t connOffSize,
+@@ -94,7 +106,7 @@ void fe_interpolate(int_t spaceDimension, unsigned char execSpace,
+ /// @param pacmanTypes Output array of PACMAN CellType values, length `n`.
+ /// @param n           Number of cell types to convert.
+ /// @throws std::runtime_error if an unsupported VTK cell type is encountered.
+-void vtk_to_pacman_cell_type(const int_t *vtkTypes, cell_t *pacmanTypes,
++PACMAN_API void vtk_to_pacman_cell_type(const int_t *vtkTypes, cell_t *pacmanTypes,
+                              int_t n);
+ 
+ // ---------------------------------------------------------------------------
+@@ -125,7 +137,7 @@ void vtk_to_pacman_cell_type(const int_t *vtkTypes, cell_t *pacmanTypes,
+ /// @throws std::invalid_argument on inconsistent sizes / null pointers,
+ /// `spaceDimension` not in {1, 2, 3}, an unknown `rbfFunction`, or if
+ /// `execSpace` is unknown or not available (@see is_execspace_available).
+-void rbf_interpolate(int_t spaceDimension, unsigned char execSpace,
++PACMAN_API void rbf_interpolate(int_t spaceDimension, unsigned char execSpace,
+                      unsigned char rbfFunction, coordinates_t *sourcePoints,
+                      int_t nSourcePoints, fp_t *sourceValues,
+                      coordinates_t *targetPoints, int_t nTargetPoints,
+@@ -157,7 +169,7 @@ void rbf_interpolate(int_t spaceDimension, unsigned char execSpace,
+ /// @throws std::invalid_argument on inconsistent sizes / null pointers,
+ /// `spaceDimension` not in {1, 2, 3}, or if `execSpace` is unknown or not
+ /// available (@see is_execspace_available).
+-void MLS_interpolate(int_t spaceDimension, unsigned char execSpace,
++PACMAN_API void MLS_interpolate(int_t spaceDimension, unsigned char execSpace,
+                      coordinates_t *sourcePoints, int_t nSourcePoints,
+                      fp_t *sourceValues, coordinates_t *targetPoints,
+                      int_t nTargetPoints, fp_t *targetValues,
+@@ -192,7 +204,7 @@ void MLS_interpolate(int_t spaceDimension, unsigned char execSpace,
+  * `spaceDimension` not in {1, 2, 3}, `polynomialDegree` below 1, or if
+  * `execSpace` is unknown or not available (@see is_execspace_available).
+  */
+-void Shepard_interpolate(int_t spaceDimension, unsigned char execSpace,
++PACMAN_API void Shepard_interpolate(int_t spaceDimension, unsigned char execSpace,
+                          coordinates_t *sourcePoints, int_t nSourcePoints,
+                          fp_t *sourceValues, coordinates_t *targetPoints,
+                          int_t nTargetPoints, fp_t *targetValues,
