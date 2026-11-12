@@ -13,6 +13,9 @@ source:
   patches:
     # Upstream has no dllexport annotations, so the Windows DLL exported nothing.
     - 0001-export-public-api-on-windows.patch
+    # Kokkos::finalize() from a C atexit handler deadlocks on Windows once the
+    # Kokkos Threads backend is enabled (kokkos >=5.2.2 hf81792a_1).
+    - 0002-finalize-kokkos-from-python-atexit.patch
 
 build:
   number: 0
