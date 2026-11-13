@@ -1,0 +1,24 @@
+diff --git a/src/pybindings/bindings.cpp b/src/pybindings/bindings.cpp
+index 62f2a75..b6de870 100644
+--- a/src/pybindings/bindings.cpp
++++ b/src/pybindings/bindings.cpp
+@@ -18,10 +18,15 @@ namespace PACMAN {
+ PYBIND11_MODULE(pacman, m) {
+   if (!Kokkos::is_initialized())
+     Kokkos::initialize();
+-  std::atexit([]() {
+-    if (Kokkos::is_initialized() && !Kokkos::is_finalized())
+-      Kokkos::finalize();
+-  });
++  // Finalize Kokkos from Python's atexit hooks, which run at the start of
++  // interpreter shutdown. A C std::atexit handler registered from an extension
++  // module runs when the module is unloaded; on Windows, the Kokkos worker
++  // threads are already terminated by then and Kokkos::finalize() deadlocks.
++  pybind11::module_::import("atexit").attr("register")(
++      pybind11::cpp_function([]() {
++        if (Kokkos::is_initialized() && !Kokkos::is_finalized())
++          Kokkos::finalize();
++      }));
+ 
+   // Manage Kokkos state using python calls
+   m.def("initialize", []() {
